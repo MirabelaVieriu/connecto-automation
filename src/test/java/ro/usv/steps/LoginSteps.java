@@ -4,8 +4,10 @@ import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import ro.usv.pages.LoginPage;
 
@@ -55,6 +57,21 @@ public class LoginSteps {
         boolean redirected = wait.until(driver -> driver.getCurrentUrl().contains(expectedPath));
 
         Assert.assertTrue("User was not redirected correctly", redirected);
+    }
+
+    @Then("I should see an error message {string}")
+    public void i_should_see_an_error_message(String message) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//*[contains(text(),'" + message + "')]")
+        ));
+    }
+
+    @Then("the login form should not be submitted")
+    public void the_login_form_should_not_be_submitted() {
+        Assert.assertTrue(
+                driver.getCurrentUrl().contains("/sign-in")
+        );
     }
 
     @After
